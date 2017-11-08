@@ -3,8 +3,10 @@ function varargout = readsubject(inputfilename, varargin)
 %
 % Usage:
 %   readsubject(filename,[type])
-%   Type is optional - 'matlab', 'excel', or 'both' (include the quotes!)
+%
+%   [Type] is optional - 'matlab', 'excel', or 'both' (include the quotes!)
 %   Defaults to 'matlab' if not specified.
+%
 %
 %   Output file is filename_analysis.xlsx
 %
@@ -19,6 +21,8 @@ elseif ~ismember(varargin{1}, {'excel','matlab','both'})
 else
     outtype = varargin{1};
 end
+
+    
 
 [inpath, inname, ~] = fileparts(inputfilename);
 xloutputfilename = strcat(inpath,inname,'_analysis.xlsx');
@@ -55,6 +59,15 @@ while ~feof(inputfile)
         % If we've reached the end of the practice block, break
         if strncmp(linein,'block',4)
             break
+        end
+        % If we reach a blank line, assume there was a test block due
+        % to audio issues, and start over
+        if isempty(linein)
+            practicearray = header;
+            while ~strncmp(linein,'block',4) && ~feof(inputfile)
+                linein = fgetl(inputfile);                
+            end
+            linein = fgetl(inputfile);
         end
         linein = linein(~isspace(linein));
         linearray = strsplit(linein,',');
