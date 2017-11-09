@@ -51,15 +51,12 @@ while ~feof(inputfile)
         linein = fgetl(inputfile);
     end
     
+    % READ PRACTICE BLOCK
     % Until you get to the end of the practice block, read in a line at a time
     % and add it to the practice block data array
     practicearray = header;
     while ~feof(inputfile)
         linein = fgetl(inputfile);
-        % If we've reached the end of the practice block, break
-        if strncmp(linein,'block',4)
-            break
-        end
         % If we reach a blank line, assume there was a test block due
         % to audio issues, and start over
         if isempty(linein)
@@ -69,6 +66,26 @@ while ~feof(inputfile)
             end
             linein = fgetl(inputfile);
         end
+        % If we've reached the end of the practice block, test to see if
+        % we're starting over
+        if strncmp(linein,'block',4)
+            linein = fgetl(inputfile);
+            if isempty(linein)
+                practicearray = header;
+            else
+                linein = linein(~isspace(linein));
+                linearray = strsplit(linein,',');
+                stimfilename = linearray{6};
+                [~, tok] = regexp(stimfilename, filere, 'match', 'tokens');
+                filenumber = tok{1}{1};
+                if ~strncmp(filenumber,'1',1)
+                    break
+                else
+                    practicearray = header;
+                end
+            end
+        end
+
         linein = linein(~isspace(linein));
         linearray = strsplit(linein,',');
         mstime = 1000 * str2double(linearray{5});
@@ -95,9 +112,9 @@ while ~feof(inputfile)
     practicearray = practicearray(:,[6,1,2,3,4,5,7,8,9,10,11]);
     if ~strcmp(outtype,'matlab')
         xlswrite(xloutputfilename,practicearray,'Practice');
-        sumarray = {filenumber, practicearray{2,9}, practicearray{end,9}};
+        sumarray = {'1', practicearray{2,9}, practicearray{end,9}};
     end
-    subject.data={filenumber,practicearray};
+    subject.data={'1',practicearray};
     
     
     %Reset Variables
