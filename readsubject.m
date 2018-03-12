@@ -25,6 +25,9 @@ end
   
 % Setup input and output files
 [inpath, inname, ~] = fileparts(inputfilename);
+if isempty(inpath)
+    inpath = '.';
+end
 xloutputfilename = strcat(inpath,filesep,inname,'_analysis.xlsx');
 moutputfilename = strcat(inpath,filesep,inname,'_analysis.mat');
 
