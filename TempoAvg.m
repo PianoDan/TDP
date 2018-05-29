@@ -179,6 +179,7 @@ for j = 1:nmelodies
     interpx = cell2mat(handles.subject(maxindex).subject.data{j,3}(2:end,11));
     meany = nanmean(allinterpy,2);
     
+    xlswrite(outputfile,handles.MelodyBox.String{j},1,['A',num2str(j*2)]);
     xlswrite(outputfile,interpx',1,['B' num2str(j*2)]);
     xlswrite(outputfile,meany',1,['B' num2str(j*2 + 1)]);
     
