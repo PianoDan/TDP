@@ -182,6 +182,7 @@ for j = 1:nmelodies
     xlswrite(outputfile,handles.MelodyBox.String{j},1,['A',num2str(j*2)]);
     xlswrite(outputfile,interpx',1,['B' num2str(j*2)]);
     xlswrite(outputfile,meany',1,['B' num2str(j*2 + 1)]);
+    disp(j);
     
 end
 

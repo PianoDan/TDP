@@ -33,7 +33,8 @@ moutputfilename = strcat(inpath,filesep,inname,'_analysis.mat');
 
 subject.id = inname(1:end-1);
 
-sumheader = {'Stimulus','Start Answer (ms)','End Answer(ms)'};
+sumheader = {'Stimulus','Start Answer (ms)','End Answer (ms)', 'Total Beats Listened',...
+    'Max Answer (ms)', 'Min Answer (ms)'};
 header = {'Block','Stim','Trial','Answer (BPM)', 'Time(s)',...
         'Stimulus File','Time(ms)', 'Time Interval(ms)', 'Answer (ms)',...
         'Beat Fraction','Total Beat'};
@@ -167,7 +168,9 @@ while ~feof(inputfile)
         xlswrite(xloutputfilename,practicearray,'Practice');
         xlswrite(xloutputfilename,interparray,'Practice', 'M1');
         xlswrite(xloutputfilename,combarray,'Practice','Y1');
-        sumarray = {'1', practicearray{2,9}, practicearray{end,9}};
+        maxanswer = max([practicearray{2:end,9}]);
+        minanswer = min([practicearray{2:end,9}]);
+        sumarray = {'1', practicearray{2,9}, practicearray{end,9}, practicearray{end,11}, maxanswer, minanswer};
     end
     % Add data to output
     subject.data={'1',practicearray,interparray,combarray};    
@@ -205,7 +208,9 @@ while ~feof(inputfile)
                 xlswrite(xloutputfilename,testarray,strcat('M',filenumber));
                 xlswrite(xloutputfilename,interparray,strcat('M',filenumber), 'M1');
                 xlswrite(xloutputfilename,combarray,strcat('M',filenumber), 'Y1');
-                sumarray = [sumarray ; {filenumber, testarray{2,9}, testarray{end,9}}];
+                maxanswer = max([testarray{2:end,9}]);
+                minanswer = min([testarray{2:end,9}]);
+                sumarray = [sumarray ; {filenumber, testarray{2,9}, testarray{end,9}, testarray{end,11}, maxanswer, minanswer}];
             end
             subject.data(end+1,:) = {filenumber,testarray,interparray,combarray};
             
@@ -287,7 +292,9 @@ if ~strcmp(outtype,'matlab')
     xlswrite(xloutputfilename,interparray,strcat('M',filenumber), 'M1');
     xlswrite(xloutputfilename,combarray,strcat('M',filenumber), 'Y1');
     % Generate summary data
-    sumarray = [sumarray ; {filenumber, testarray{2,9}, testarray{end,9}}];
+    maxanswer = max([testarray{2:end,9}]);
+    minanswer = min([testarray{2:end,9}]);
+    sumarray = [sumarray ; {filenumber, testarray{2,9}, testarray{end,9}, testarray{end,11}, maxanswer, minanswer}];
     [~,idx] = sort(str2double(sumarray(:,1)));
     sumarray = [sumheader;sumarray(idx,:)];
     xlswrite(xloutputfilename,cellstr(strcat({'Summary for Subject'},{' '},subject.id)));
