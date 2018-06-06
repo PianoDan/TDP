@@ -89,13 +89,16 @@ ids = [];
 for i = length(subjectlist):-1:1
     handles.subject(i) = load([handles.dir,filesep,subjectlist(i).name]);  
     melodies = cellfun(@str2num,handles.subject(i).subject.data(:,1));
-    ids = [ids str2double(handles.subject(i).subject.id)];
+    ids = [str2double(handles.subject(i).subject.id) ids];
     [melodies, indices] = sort(melodies);
     handles.subject(i).subject.data = handles.subject(i).subject.data(indices,:);
 end
 
 [ids, idindices] = sort(ids);
+handles.subject = handles.subject(:,idindices);
 
+
+handles.idindices = idindices;
 handles.MelodyBox.String = ids;
 set(handles.SaveAveragesButton,'enable','on');
 
