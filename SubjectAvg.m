@@ -167,7 +167,7 @@ function SaveAveragesButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-nsubjects = length(handles.MelodyBox.String);
+nsubjects = length(handles.MelodyBox.String(:,1));
 header = {'Subject'};
 outputfile = [handles.dir,filesep,'SubjectAverages.xlsx'];
 
@@ -190,7 +190,7 @@ for j = 1:nsubjects
     interpx = cell2mat(handles.subject(j).subject.data{maxindex,3}(2:end,11));
     meany = nanmean(allinterpy,2);
     
-    xlswrite(outputfile,handles.MelodyBox.String{j},1,['A',num2str(j*2)]);
+    xlswrite(outputfile,handles.MelodyBox.String(j,:),1,['A',num2str(j*2)]);
     xlswrite(outputfile,interpx',1,['B' num2str(j*2)]);
     xlswrite(outputfile,meany',1,['B' num2str(j*2 + 1)]);
     
