@@ -190,7 +190,7 @@ for j = 1:nsubjects
     interpx = cell2mat(handles.subject(j).subject.data{maxindex,3}(2:end,11));
     meany = nanmean(allinterpy,2);
     
-    xlswrite(outputfile,handles.MelodyBox.String(j,:),1,['A',num2str(j*2)]);
+    xlswrite(outputfile,cellstr(handles.MelodyBox.String(j,:)),1,['A',num2str(j*2)]);
     xlswrite(outputfile,interpx',1,['B' num2str(j*2)]);
     xlswrite(outputfile,meany',1,['B' num2str(j*2 + 1)]);
     
